@@ -138,6 +138,7 @@ button { font: inherit; }
   max-height: 96px;
   object-fit: contain;
   filter: drop-shadow(0 0 9px rgba(108,220,255,.55));
+  margin-right: 88px;
 }
 
 .top-nav {
@@ -1531,46 +1532,25 @@ button { font: inherit; }
 /* =========================
    HSC AUTHENTICATION GATE
    ========================= */
-.auth-status {
-  position: absolute;
-  right: 28px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  min-height: 34px;
-  padding: 6px 10px;
-  border: 1px solid rgba(106,216,255,.2);
-  background: rgba(2,13,23,.74);
-  color: var(--muted);
-  font-family: "Orbitron", sans-serif;
-  font-size: .5rem;
-  letter-spacing: .12em;
-}
-.auth-indicator {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #ff3e4d;
-  box-shadow: 0 0 10px rgba(255,62,77,.85);
-}
-body.authenticated .auth-indicator {
-  background: #52ffbe;
-  box-shadow: 0 0 10px rgba(82,255,190,.8);
-}
 .logout-button {
-  margin-left: 5px;
   border: 1px solid rgba(255,62,77,.45);
-  background: rgba(75,8,16,.7);
+  background: rgba(75,8,16,.78);
   color: #ff9ca5;
-  padding: 6px 9px;
+  padding: 7px 11px;
   font-family: "Orbitron", sans-serif;
-  font-size: .46rem;
+  font-size: .48rem;
   letter-spacing: .12em;
   cursor: pointer;
+  white-space: nowrap;
 }
 .logout-button:hover { border-color: var(--red); color: #fff; }
+
+.header-logout {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  z-index: 8;
+}
 
 .login-shell {
   min-height: calc(100vh - 185px);
@@ -1718,14 +1698,16 @@ body.authenticated .auth-indicator {
 body:not(.authenticated) .terminal-launch { pointer-events: none; opacity: .42; }
 
 @media (max-width: 900px) {
-  .auth-status { right: 12px; }
+  .robot-logo { margin-right: 72px; }
+  .header-logout { right: 12px; top: 10px; }
   .login-panel { grid-template-columns: 1fr; }
   .login-emblem { min-height: 260px; border-right: 0; border-bottom: 1px solid rgba(106,216,255,.22); }
   .login-reticle { width: 170px; }
   .login-copy { padding: 36px 28px 40px; }
 }
 @media (max-width: 650px) {
-  .auth-status { position: static; transform: none; margin: 0 10px 8px auto; width: max-content; }
+  .robot-logo { margin-right: 58px; width: 82px; }
+  .header-logout { right: 8px; top: 8px; padding: 6px 8px; font-size: .42rem; }
   .login-shell { padding-top: 30px; }
   .login-emblem { min-height: 210px; }
   .login-reticle { width: 138px; }
@@ -1734,3 +1716,189 @@ body:not(.authenticated) .terminal-launch { pointer-events: none; opacity: .42; 
 /* Administrative route visibility */
 .admin-only { display: none !important; }
 body.admin-access .admin-only { display: inline-flex !important; }
+
+/* =========================
+   CUSTOMER SERVICE
+   ========================= */
+.auth-only { display: none !important; }
+body.authenticated .auth-only { display: inline-flex !important; }
+
+.customer-service-shell {
+  width: min(1120px, 94vw);
+  margin: 28px auto 70px;
+}
+.customer-service-card {
+  padding: clamp(24px, 4vw, 52px);
+  background: linear-gradient(135deg, rgba(3,17,28,.96), rgba(5,28,43,.9));
+}
+.customer-service-copy h1 {
+  margin: 10px 0 12px;
+  font-family: "Orbitron", sans-serif;
+  letter-spacing: .08em;
+  font-size: clamp(1.8rem, 4vw, 3.3rem);
+}
+.customer-service-intro {
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 28px 0;
+}
+.contact-item {
+  min-height: 105px;
+  padding: 18px;
+  border: 1px solid rgba(106,216,255,.24);
+  background: rgba(4,16,27,.62);
+}
+.contact-item span,
+.appointment-form label span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-family: "Orbitron", sans-serif;
+  font-size: .62rem;
+  letter-spacing: .17em;
+}
+.contact-item strong,
+.contact-item a {
+  color: var(--cyan-bright);
+  font-family: "Orbitron", sans-serif;
+  font-size: .88rem;
+  letter-spacing: .04em;
+  overflow-wrap: anywhere;
+}
+.contact-item a:hover { color: #fff; text-shadow: 0 0 10px rgba(106,216,255,.6); }
+.appointment-button {
+  border: 1px solid var(--cyan);
+  background: linear-gradient(180deg, rgba(13,72,103,.92), rgba(4,31,49,.96));
+  color: var(--cyan-bright);
+  padding: 12px 18px;
+  font-family: "Orbitron", sans-serif;
+  font-size: .7rem;
+  letter-spacing: .13em;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(34,163,255,.13);
+}
+.appointment-button:hover { color: #fff; box-shadow: 0 0 22px rgba(34,163,255,.3); }
+.appointment-button:disabled { opacity: .55; cursor: wait; }
+.appointment-note { color: var(--muted); font-size: .82rem; }
+.appointment-form {
+  margin-top: 34px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(106,216,255,.22);
+}
+.appointment-form[hidden] { display: none !important; }
+.appointment-form-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.appointment-form-head h2 {
+  margin: 8px 0 0;
+  font-family: "Orbitron", sans-serif;
+  letter-spacing: .08em;
+}
+.appointment-close {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255,62,77,.45);
+  background: rgba(75,8,16,.45);
+  color: #ff9ca5;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.appointment-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.appointment-fields label { display: block; }
+.appointment-wide { grid-column: 1 / -1; }
+.appointment-form input,
+.appointment-form textarea {
+  width: 100%;
+  border: 1px solid rgba(106,216,255,.26);
+  background: rgba(1,10,17,.82);
+  color: var(--text);
+  padding: 12px 13px;
+  outline: none;
+  font: inherit;
+}
+.appointment-form input:focus,
+.appointment-form textarea:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px rgba(106,216,255,.08);
+}
+.appointment-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.appointment-message {
+  color: var(--muted);
+  font-family: "Orbitron", sans-serif;
+  font-size: .62rem;
+  letter-spacing: .08em;
+}
+.appointment-message.success { color: var(--green); }
+.appointment-message.error { color: var(--red); }
+
+@media (max-width: 720px) {
+  .contact-grid,
+  .appointment-fields { grid-template-columns: 1fr; }
+  .appointment-wide { grid-column: auto; }
+}
+
+/* Login / sign-up switch */
+.signup-prompt {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(106,216,255,.14);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #6f96a8;
+  font-family: "Orbitron", sans-serif;
+  font-size: .5rem;
+  letter-spacing: .1em;
+}
+.signup-link,
+.signup-close {
+  border: 0;
+  background: transparent;
+  color: var(--cyan);
+  padding: 4px 2px;
+  font-family: "Orbitron", sans-serif;
+  font-size: .52rem;
+  letter-spacing: .11em;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.signup-link:hover,
+.signup-close:hover { color: var(--cyan-bright); }
+.signup-form[hidden],
+.login-form[hidden],
+.signup-prompt[hidden] { display: none !important; }
+.signup-form { margin-top: 4px; }
+.signup-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+.signup-heading .section-tag { font-size: .58rem; }
+.signup-close { text-decoration: none; opacity: .9; }
+.signup-submit { margin-top: 8px; }

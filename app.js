@@ -5,7 +5,7 @@
     {
       id: '7742-A', name: 'Subject 7742-A', alias: 'The Half Machine', classification: 'Augmented Human',
       threat: 'Critical', status: 'At Large', location: 'Neo Harbor / Sector 7', bounty: '$1,000,000',
-      image: 'assets/subject-portrait.jpg', tint: 'tint-1',
+      image: 'assets/mugshots1.png', tint: 'tint-1', // Image for Subject 7742-A
       lead: 'A human mind. A machine advantage.',
       summary: 'Former HSC systems engineer linked to neural-interface theft, city infrastructure intrusions, surveillance tampering, and unauthorized cybernetic augmentation.',
       story: [
@@ -18,7 +18,7 @@
     {
       id: '2190-X', name: 'Mara Voss', alias: 'Ghostline', classification: 'Cyber Operative',
       threat: 'High', status: 'Wanted', location: 'Neon Market / District 4', bounty: '$750,000',
-      image: 'assets/subject-portrait.jpg', tint: 'tint-2',
+      image: 'assets/bounty-02.jpg', tint: 'tint-2', // Image for Mara Voss
       lead: 'Invisible in the cameras. Everywhere in the network.',
       summary: 'Suspected broker of stolen biometric identities and restricted network credentials with a pattern of erasing surveillance records after operations.',
       story: [
@@ -31,7 +31,7 @@
     {
       id: '6021-C', name: 'Unit C-19', alias: 'Cold Signal', classification: 'Synthetic',
       threat: 'High', status: 'Wanted', location: 'Industrial Ring / Zone 11', bounty: '$600,000',
-      image: 'assets/subject-portrait.jpg', tint: 'tint-3',
+      image: 'assets/bounty-03.jpg', tint: 'tint-3', // Image for Unit C-19
       lead: 'No registered owner. No known command source.',
       summary: 'Unregistered synthetic unit repeatedly detected near secure HSC relay sites. Its origin and remote command source remain unknown.',
       story: [
@@ -44,7 +44,7 @@
     {
       id: '1188-M', name: 'Elias Renn', alias: 'Switchback', classification: 'Human / Neural Modded',
       threat: 'High', status: 'Wanted', location: 'Old Metro / Sector 3', bounty: '$450,000',
-      image: 'assets/subject-portrait.jpg', tint: 'tint-4',
+      image: 'assets/bounty-04.jpg', tint: 'tint-4', // Image for Elias Renn
       lead: 'Black-market hardware with a human face.',
       summary: 'Illegal hardware technician tied to black-market neural modifications and resale of decommissioned law-enforcement components.',
       story: [
@@ -57,7 +57,7 @@
     {
       id: '4317-K', name: 'Kira Sol', alias: 'Blue Static', classification: 'Augmented Human',
       threat: 'Medium', status: 'Wanted', location: 'Glassline / Sector 9', bounty: '$300,000',
-      image: 'assets/subject-portrait.jpg', tint: 'tint-5',
+      image: 'assets/bounty-05.jpg', tint: 'tint-5', // Image for Kira Sol
       lead: 'Fast courier. Faster signal.',
       summary: 'Data courier accused of transporting encrypted intelligence, stolen access keys, and prototype components between criminal networks.',
       story: [
@@ -70,7 +70,7 @@
     {
       id: '8804-V', name: 'Dax Mercer', alias: 'Red Vector', classification: 'Combat Augmented',
       threat: 'Critical', status: 'At Large', location: 'South Arc / Zone 2', bounty: '$900,000',
-      image: 'assets/subject-portrait.jpg', tint: 'tint-6',
+      image: 'assets/bounty-06.jpg', tint: 'tint-6', // Image for Dax Mercer
       lead: 'Military-grade upgrades. Civilian rules no longer apply.',
       summary: 'Former private security contractor suspected of trafficking combat augmentations and leading raids on automated transport depots.',
       story: [
@@ -91,7 +91,8 @@
     model: { context: 'SUBJECT ANALYSIS // LIVE RENDER', motto: 'INTERACTIVE SUBJECT ANALYSIS', title: 'HSC // 3D Subject Viewer' },
     story: { context: 'CASE FILE // ACCESS GRANTED', motto: 'ACTIVE CASE FILE // CLASSIFIED', title: 'HSC // Subject Story' },
     inspo: { context: 'DESIGN ARCHIVE // INSPIRATION LOG', motto: 'INSPIRATION ARCHIVE // FILE 04', title: 'HSC // Inspiration' },
-    terminal: { context: 'HSC NETWORK // CASE TERMINAL', motto: 'CASE TERMINAL // WEB APPLICATION', title: 'HSC // Case Terminal' }
+    terminal: { context: 'HSC NETWORK // CASE TERMINAL', motto: 'CASE TERMINAL // WEB APPLICATION', title: 'HSC // Case Terminal' },
+    'customer-service': { context: 'HSC SUPPORT NETWORK // CUSTOMER SERVICE', motto: 'CUSTOMER SERVICE // APPOINTMENT DESK', title: 'HSC // Customer Service' }
   };
 
   const views = [...document.querySelectorAll('.app-view')];
@@ -100,9 +101,14 @@
   const footerMotto = document.querySelector('#footer-motto');
   const loginForm = document.querySelector('#login-form');
   const loginMessage = document.querySelector('#login-message');
+  const signupForm = document.querySelector('#signup-form');
+  const signupMessage = document.querySelector('#signup-message');
+  const openSignupButton = document.querySelector('#open-signup');
+  const closeSignupButton = document.querySelector('#close-signup');
+  const signupPrompt = document.querySelector('.signup-prompt');
   const authStatusText = document.querySelector('#auth-status-text');
   const logoutButton = document.querySelector('#logout-button');
-  const protectedRoutes = new Set(['home', 'model', 'story', 'terminal']);
+  const protectedRoutes = new Set(['home', 'model', 'story', 'terminal', 'customer-service']);
   const adminRoutes = new Set(['terminal']);
 
   function isAuthenticated() {
@@ -282,13 +288,91 @@
   });
   window.addEventListener('hashchange', () => showView(location.hash, { scroll: false }));
 
+  function getRegisteredUsers() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('hsc-registered-users') || '[]');
+      return Array.isArray(saved) ? saved : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function getAllUsers() {
+    const configured = Array.isArray(window.HSC_AUTH?.users) ? window.HSC_AUTH.users : [];
+    return [...configured, ...getRegisteredUsers()];
+  }
+
+  function setSignupMode(enabled) {
+    if (!loginForm || !signupForm) return;
+    loginForm.hidden = enabled;
+    signupForm.hidden = !enabled;
+    if (signupPrompt) signupPrompt.hidden = enabled;
+    if (enabled) {
+      if (loginMessage) loginMessage.textContent = '';
+      const field = document.querySelector('#signup-display-name');
+      if (field) window.setTimeout(() => field.focus(), 0);
+    } else {
+      if (signupMessage) signupMessage.textContent = '';
+      const field = document.querySelector('#login-username');
+      if (field) window.setTimeout(() => field.focus(), 0);
+    }
+  }
+
+  if (openSignupButton) openSignupButton.addEventListener('click', () => setSignupMode(true));
+  if (closeSignupButton) closeSignupButton.addEventListener('click', () => setSignupMode(false));
+
+  if (signupForm) {
+    signupForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const formData = new FormData(signupForm);
+      const displayName = String(formData.get('displayName') || '').trim();
+      const username = String(formData.get('username') || '').trim();
+      const password = String(formData.get('password') || '');
+      const confirmPassword = String(formData.get('confirmPassword') || '');
+
+      if (password !== confirmPassword) {
+        if (signupMessage) {
+          signupMessage.textContent = 'REGISTRATION FAILED // PASSWORDS DO NOT MATCH';
+          signupMessage.classList.remove('success');
+        }
+        return;
+      }
+
+      const usernameTaken = getAllUsers().some(user =>
+        String(user.username || '').toLowerCase() === username.toLowerCase()
+      );
+      if (usernameTaken) {
+        if (signupMessage) {
+          signupMessage.textContent = 'REGISTRATION FAILED // USERNAME ALREADY EXISTS';
+          signupMessage.classList.remove('success');
+        }
+        return;
+      }
+
+      const registeredUsers = getRegisteredUsers();
+      registeredUsers.push({ username, password, displayName: displayName || username, role: 'officer' });
+      localStorage.setItem('hsc-registered-users', JSON.stringify(registeredUsers));
+
+      signupForm.reset();
+      setSignupMode(false);
+      const loginUsername = document.querySelector('#login-username');
+      if (loginUsername) loginUsername.value = username;
+      if (loginMessage) {
+        loginMessage.textContent = 'ACCOUNT CREATED // SIGN IN WITH YOUR NEW CREDENTIALS';
+        loginMessage.classList.add('success');
+      }
+      const loginPassword = document.querySelector('#login-password');
+      if (loginPassword) loginPassword.focus();
+    });
+  }
+
   if (loginForm) {
     loginForm.addEventListener('submit', event => {
       event.preventDefault();
       const formData = new FormData(loginForm);
       const username = String(formData.get('username') || '').trim();
       const password = String(formData.get('password') || '');
-      const users = Array.isArray(window.HSC_AUTH?.users) ? window.HSC_AUTH.users : [];
+      const users = getAllUsers();
       const account = users.find(user =>
         String(user.username || '').toLowerCase() === username.toLowerCase() &&
         String(user.password || '') === password
@@ -319,6 +403,99 @@
       loginForm.reset();
       history.replaceState({ route: 'home', subject: selectedSubject.id }, '', '#home');
       showView('home');
+    });
+  }
+
+  // Customer service contact info + appointment requests
+  const customerService = window.HSC_CUSTOMER_SERVICE || {};
+  const supportName = document.querySelector('#support-contact-name');
+  const supportEmail = document.querySelector('#support-contact-email');
+  const supportPhone = document.querySelector('#support-contact-phone');
+  const supportHours = document.querySelector('#support-contact-hours');
+  const appointmentForm = document.querySelector('#appointment-form');
+  const appointmentMessage = document.querySelector('#appointment-message');
+  const openAppointment = document.querySelector('#open-appointment');
+  const closeAppointment = document.querySelector('#close-appointment');
+
+  if (supportName) supportName.textContent = customerService.contactName || 'HSC Customer Service';
+  if (supportEmail) {
+    const email = customerService.email || 'support@example.com';
+    supportEmail.textContent = email;
+    supportEmail.href = `mailto:${email}`;
+  }
+  if (supportPhone) {
+    supportPhone.textContent = customerService.phone || '(555) 555-0100';
+    supportPhone.href = `tel:${customerService.phoneLink || '+15555550100'}`;
+  }
+  if (supportHours) supportHours.textContent = customerService.hours || 'Mon-Fri // 9:00 AM-5:00 PM';
+
+  if (openAppointment && appointmentForm) {
+    openAppointment.addEventListener('click', () => {
+      appointmentForm.hidden = false;
+      appointmentForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const firstInput = appointmentForm.querySelector('input');
+      if (firstInput) firstInput.focus();
+    });
+  }
+  if (closeAppointment && appointmentForm) {
+    closeAppointment.addEventListener('click', () => {
+      appointmentForm.hidden = true;
+      if (appointmentMessage) appointmentMessage.textContent = '';
+    });
+  }
+
+  if (appointmentForm) {
+    appointmentForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const email = String(customerService.email || '').trim();
+      const formData = new FormData(appointmentForm);
+      if (!email || email === 'support@example.com') {
+        if (appointmentMessage) {
+          appointmentMessage.textContent = 'SETUP REQUIRED // ADD THE REAL SUPPORT EMAIL IN customer-service-config.js';
+          appointmentMessage.classList.add('error');
+        }
+        return;
+      }
+
+      const submitButton = appointmentForm.querySelector('button[type="submit"]');
+      if (submitButton) submitButton.disabled = true;
+      if (appointmentMessage) {
+        appointmentMessage.textContent = 'TRANSMITTING APPOINTMENT REQUEST...';
+        appointmentMessage.classList.remove('error', 'success');
+      }
+
+      const payload = new FormData();
+      payload.append('name', String(formData.get('name') || ''));
+      payload.append('email', String(formData.get('email') || ''));
+      payload.append('preferred_date', String(formData.get('date') || ''));
+      payload.append('preferred_time', String(formData.get('time') || ''));
+      payload.append('notes', String(formData.get('notes') || ''));
+      payload.append('_subject', `HSC Appointment Request - ${String(formData.get('name') || 'Customer')}`);
+      payload.append('_template', 'table');
+      payload.append('_captcha', 'false');
+
+      try {
+        const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(email)}`, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: payload
+        });
+        if (!response.ok) throw new Error('Appointment email could not be sent.');
+        appointmentForm.reset();
+        if (appointmentMessage) {
+          appointmentMessage.textContent = 'APPOINTMENT REQUEST SENT // CUSTOMER SERVICE HAS BEEN ALERTED';
+          appointmentMessage.classList.remove('error');
+          appointmentMessage.classList.add('success');
+        }
+      } catch (error) {
+        if (appointmentMessage) {
+          appointmentMessage.textContent = 'EMAIL SEND FAILED // TRY AGAIN OR USE THE CONTACT EMAIL ABOVE';
+          appointmentMessage.classList.remove('success');
+          appointmentMessage.classList.add('error');
+        }
+      } finally {
+        if (submitButton) submitButton.disabled = false;
+      }
     });
   }
 

@@ -21,15 +21,12 @@
       <span class="brand-subtitle">Human Systems Check</span>
     </a>
     <img class="robot-logo" src="assets/robot-logo.png" alt="HSC robot logo" />
-    <div class="auth-status" id="auth-status" aria-live="polite">
-      <span class="auth-indicator"></span>
-      <span id="auth-status-text">ACCESS LOCKED</span>
-      <button id="logout-button" class="logout-button" type="button" hidden>LOG OUT</button>
-    </div>
+    <button id="logout-button" class="logout-button header-logout" type="button" hidden>LOG OUT</button>
   </header>
 
   <nav class="top-nav top-nav-single" aria-label="Primary navigation">
     <a class="nav-chip app-route" href="#inspo" data-route="inspo"><span>04</span> INSPO</a>
+    <a class="nav-chip app-route auth-only" href="#customer-service" data-route="customer-service"><span>05</span> CUSTOMER SERVICE</a>
   </nav>
 
   <main id="app-shell" class="single-app-shell">
@@ -54,6 +51,36 @@
               </label>
               <button class="login-submit" type="submit">AUTHENTICATE // ENTER NETWORK</button>
               <p id="login-message" class="login-message" role="alert"></p>
+            </form>
+
+            <div class="signup-prompt">
+              <span>DON'T HAVE AN ACCOUNT?</span>
+              <button id="open-signup" class="signup-link" type="button">CREATE ACCOUNT</button>
+            </div>
+
+            <form id="signup-form" class="login-form signup-form" autocomplete="off" hidden>
+              <div class="signup-heading">
+                <p class="section-tag">NEW USER REGISTRATION</p>
+                <button id="close-signup" class="signup-close" type="button" aria-label="Return to sign in">RETURN TO SIGN IN</button>
+              </div>
+              <label class="login-field">
+                <span>DISPLAY NAME</span>
+                <input id="signup-display-name" name="displayName" type="text" autocomplete="name" required placeholder="Enter display name" />
+              </label>
+              <label class="login-field">
+                <span>USERNAME</span>
+                <input id="signup-username" name="username" type="text" autocomplete="username" required minlength="3" placeholder="Create username" />
+              </label>
+              <label class="login-field">
+                <span>PASSWORD</span>
+                <input id="signup-password" name="password" type="password" autocomplete="new-password" required minlength="4" placeholder="Create password" />
+              </label>
+              <label class="login-field">
+                <span>CONFIRM PASSWORD</span>
+                <input id="signup-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" required minlength="4" placeholder="Confirm password" />
+              </label>
+              <button class="login-submit signup-submit" type="submit">CREATE ACCOUNT // REGISTER</button>
+              <p id="signup-message" class="login-message" role="alert"></p>
             </form>
             <div class="login-security-note">
               <span class="pulse-dot"></span>
@@ -300,6 +327,60 @@
 <p><strong>CREATIVE NOTE:</strong> HSC is an original fictional project. Cyberpunk 2077 and The Terminator are referenced here as creative inspirations for atmosphere and character direction, not as part of the same fictional universe.</p>
 </section>
 </div>
+
+</section><section class="app-view" data-view="customer-service" aria-hidden="true">
+  <div class="customer-service-shell">
+    <section class="customer-service-card panel-frame">
+      <div class="customer-service-copy">
+        <p class="section-tag">HSC SUPPORT NETWORK // CUSTOMER SERVICE</p>
+        <h1>CUSTOMER SERVICE</h1>
+        <p class="customer-service-intro">Need help with an HSC record, case access, or account issue? Contact the support desk below or request an appointment.</p>
+
+        <div class="contact-grid">
+          <article class="contact-item">
+            <span>CONTACT NAME</span>
+            <strong id="support-contact-name">HSC Customer Service</strong>
+          </article>
+          <article class="contact-item">
+            <span>EMAIL</span>
+            <a id="support-contact-email" href="mailto:support@example.com">support@example.com</a>
+          </article>
+          <article class="contact-item">
+            <span>PHONE</span>
+            <a id="support-contact-phone" href="tel:+15555550100">(555) 555-0100</a>
+          </article>
+          <article class="contact-item">
+            <span>HOURS</span>
+            <strong id="support-contact-hours">Mon-Fri // 9:00 AM-5:00 PM</strong>
+          </article>
+        </div>
+
+        <button id="open-appointment" class="appointment-button" type="button">MAKE APPOINTMENT</button>
+        <p class="appointment-note">Submitting an appointment request sends an email alert to the customer service email listed above.</p>
+      </div>
+
+      <form id="appointment-form" class="appointment-form" hidden>
+        <div class="appointment-form-head">
+          <div>
+            <p class="section-tag">APPOINTMENT REQUEST // SECURE FORM</p>
+            <h2>REQUEST APPOINTMENT</h2>
+          </div>
+          <button id="close-appointment" class="appointment-close" type="button" aria-label="Close appointment form">×</button>
+        </div>
+        <div class="appointment-fields">
+          <label><span>YOUR NAME</span><input name="name" type="text" required maxlength="80" placeholder="Enter your name" /></label>
+          <label><span>YOUR EMAIL</span><input name="email" type="email" required maxlength="120" placeholder="you@example.com" /></label>
+          <label><span>PREFERRED DATE</span><input name="date" type="date" required /></label>
+          <label><span>PREFERRED TIME</span><input name="time" type="time" required /></label>
+          <label class="appointment-wide"><span>REASON / NOTES</span><textarea name="notes" rows="4" maxlength="600" placeholder="What would you like help with?"></textarea></label>
+        </div>
+        <div class="appointment-actions">
+          <button class="appointment-button" type="submit">SEND APPOINTMENT REQUEST</button>
+          <span id="appointment-message" class="appointment-message" role="status"></span>
+        </div>
+      </form>
+    </section>
+  </div>
 </section><section class="app-view" data-view="terminal" aria-hidden="true">
 <div class="page-route-bar">
   <a class="route-action" href="#home">‹ RETURN TO HOME</a>
@@ -450,6 +531,7 @@
   <script src="https://cdn.babylonjs.com/babylon.js"></script>
   <script src="creators.js"></script>
   <script src="auth-config.js"></script>
+  <script src="customer-service-config.js"></script>
   <script src="app.js"></script>
   <script src="application.js"></script>
   <script src="model.js"></script>

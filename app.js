@@ -1,0 +1,239 @@
+(() => {
+  'use strict';
+
+  const subjects = [
+    {
+      id: '7742-A', name: 'Subject 7742-A', alias: 'The Half Machine', classification: 'Augmented Human',
+      threat: 'Critical', status: 'At Large', location: 'Neo Harbor / Sector 7', bounty: '$1,000,000',
+      image: 'assets/subject-portrait.jpg', tint: 'tint-1',
+      lead: 'A human mind. A machine advantage.',
+      summary: 'Former HSC systems engineer linked to neural-interface theft, city infrastructure intrusions, surveillance tampering, and unauthorized cybernetic augmentation.',
+      story: [
+        'Subject #7742-A was once an HSC systems engineer assigned to experimental neural-interface research. After an unauthorized augmentation procedure, the subject disappeared with prototype technology and restricted network credentials.',
+        'HSC intelligence later linked the subject to coordinated intrusions against city infrastructure, classified data theft, surveillance tampering, and the remote takeover of automated security systems. Investigators believe the augmentation allows direct neural interaction with machines at a speed normal operators cannot match.',
+        'The subject remains at large. HSC field units are instructed to identify, report, and contain rather than approach without specialized support.'
+      ],
+      quote: '“He doesn’t just hack systems. He thinks inside them.”'
+    },
+    {
+      id: '2190-X', name: 'Mara Voss', alias: 'Ghostline', classification: 'Cyber Operative',
+      threat: 'High', status: 'Wanted', location: 'Neon Market / District 4', bounty: '$750,000',
+      image: 'assets/subject-portrait.jpg', tint: 'tint-2',
+      lead: 'Invisible in the cameras. Everywhere in the network.',
+      summary: 'Suspected broker of stolen biometric identities and restricted network credentials with a pattern of erasing surveillance records after operations.',
+      story: [
+        'Mara Voss, known in underground channels as Ghostline, is suspected of building false identities from stolen biometric records and compromised civic databases.',
+        'Multiple HSC investigations place her near high-value data thefts where security footage disappeared within minutes. Analysts believe she uses portable intrusion hardware and human contacts inside private security firms.',
+        'Ghostline is wanted for questioning in several active cases and should be treated as a high-threat cyber operative capable of defeating normal electronic tracking.'
+      ],
+      quote: '“If a camera saw her, the footage usually doesn’t survive.”'
+    },
+    {
+      id: '6021-C', name: 'Unit C-19', alias: 'Cold Signal', classification: 'Synthetic',
+      threat: 'High', status: 'Wanted', location: 'Industrial Ring / Zone 11', bounty: '$600,000',
+      image: 'assets/subject-portrait.jpg', tint: 'tint-3',
+      lead: 'No registered owner. No known command source.',
+      summary: 'Unregistered synthetic unit repeatedly detected near secure HSC relay sites. Its origin and remote command source remain unknown.',
+      story: [
+        'Unit C-19 first appeared on HSC monitoring systems after an unregistered synthetic signature was detected inside the Industrial Ring.',
+        'The unit has since been recorded near secure relay stations, abandoned manufacturing plants, and restricted freight corridors. No verified owner, manufacturer, or legal registration has been located.',
+        'HSC believes the unit may be receiving instructions from an unknown remote operator. Recovery of the synthetic intact is considered a priority.'
+      ],
+      quote: '“It never speaks. It just appears where the network is weakest.”'
+    },
+    {
+      id: '1188-M', name: 'Elias Renn', alias: 'Switchback', classification: 'Human / Neural Modded',
+      threat: 'High', status: 'Wanted', location: 'Old Metro / Sector 3', bounty: '$450,000',
+      image: 'assets/subject-portrait.jpg', tint: 'tint-4',
+      lead: 'Black-market hardware with a human face.',
+      summary: 'Illegal hardware technician tied to black-market neural modifications and resale of decommissioned law-enforcement components.',
+      story: [
+        'Elias Renn operated as a licensed hardware technician before investigators connected his workshop to illegal neural modifications and restricted police technology.',
+        'Witnesses say Renn can rebuild damaged implants, alter identification chips, and hide prohibited upgrades from standard scanners. Several wanted subjects are believed to have used his services.',
+        'Renn abandoned his registered shop after an HSC raid and is now believed to be operating from temporary labs beneath the Old Metro.'
+      ],
+      quote: '“If it can be installed, Switchback can make it disappear from the records.”'
+    },
+    {
+      id: '4317-K', name: 'Kira Sol', alias: 'Blue Static', classification: 'Augmented Human',
+      threat: 'Medium', status: 'Wanted', location: 'Glassline / Sector 9', bounty: '$300,000',
+      image: 'assets/subject-portrait.jpg', tint: 'tint-5',
+      lead: 'Fast courier. Faster signal.',
+      summary: 'Data courier accused of transporting encrypted intelligence, stolen access keys, and prototype components between criminal networks.',
+      story: [
+        'Kira Sol became known as Blue Static after several encrypted data transfers were traced to brief wireless bursts matching her travel pattern.',
+        'Investigators believe she serves as a courier for physical storage devices, access keys, and prototype components that cannot safely move through normal networks.',
+        'Her mobility and modified reflex system make conventional pursuit difficult. HSC has issued an active warrant and a standing information bounty.'
+      ],
+      quote: '“By the time the signal appears, she is already leaving the district.”'
+    },
+    {
+      id: '8804-V', name: 'Dax Mercer', alias: 'Red Vector', classification: 'Combat Augmented',
+      threat: 'Critical', status: 'At Large', location: 'South Arc / Zone 2', bounty: '$900,000',
+      image: 'assets/subject-portrait.jpg', tint: 'tint-6',
+      lead: 'Military-grade upgrades. Civilian rules no longer apply.',
+      summary: 'Former private security contractor suspected of trafficking combat augmentations and leading raids on automated transport depots.',
+      story: [
+        'Dax Mercer disappeared from private security employment after an internal investigation into missing military-grade augmentation hardware.',
+        'HSC later connected the alias Red Vector to coordinated raids on automated transport depots, weapons shipments, and restricted maintenance facilities.',
+        'Mercer is considered extremely dangerous due to combat-grade reflex, strength, and targeting enhancements. Specialized response units are required for any attempted apprehension.'
+      ],
+      quote: '“Red Vector does not run from security. He breaks through it.”'
+    }
+  ];
+
+  window.HSC_SUBJECTS = subjects;
+  let selectedSubject = subjects[0];
+
+  const viewMeta = {
+    home: { context: 'CIVIL PROTECTION // ACTIVE NETWORK', motto: 'REAL PEOPLE · REAL THREATS · REAL SOLUTIONS', title: 'HSC // Human Systems Check' },
+    model: { context: 'SUBJECT ANALYSIS // LIVE RENDER', motto: 'INTERACTIVE SUBJECT ANALYSIS', title: 'HSC // 3D Subject Viewer' },
+    story: { context: 'CASE FILE // ACCESS GRANTED', motto: 'ACTIVE CASE FILE // CLASSIFIED', title: 'HSC // Subject Story' },
+    inspo: { context: 'DESIGN ARCHIVE // INSPIRATION LOG', motto: 'INSPIRATION ARCHIVE // FILE 04', title: 'HSC // Inspiration' },
+    terminal: { context: 'HSC NETWORK // CASE TERMINAL', motto: 'CASE TERMINAL // WEB APPLICATION', title: 'HSC // Case Terminal' }
+  };
+
+  const views = [...document.querySelectorAll('.app-view')];
+  const navLinks = [...document.querySelectorAll('.nav-chip[data-route]')];
+  const headerContext = document.querySelector('#header-context');
+  const footerMotto = document.querySelector('#footer-motto');
+
+  function normalizeRoute(value) {
+    const route = String(value || '').replace(/^#/, '').toLowerCase();
+    return Object.prototype.hasOwnProperty.call(viewMeta, route) ? route : 'home';
+  }
+
+  function selectSubject(id) {
+    const match = subjects.find(item => item.id === id);
+    if (match) selectedSubject = match;
+    updateSubjectViews();
+  }
+
+  function updateSubjectViews() {
+    const s = selectedSubject;
+    const setText = (selector, value) => {
+      const node = document.querySelector(selector);
+      if (node) node.textContent = value;
+    };
+
+    setText('#model-subject-title', `SUBJECT #${s.id}`);
+    setText('#model-classification', s.classification);
+    setText('#model-threat', s.threat);
+    setText('#model-bounty', s.bounty);
+    setText('#model-status', s.status);
+    setText('#model-alias', s.alias);
+    setText('#model-id', s.id);
+    const modelImage = document.querySelector('#model-subject-image');
+    if (modelImage) modelImage.src = s.image;
+
+    setText('#story-case-tag', `HSC // CASE FILE #${s.id}`);
+    setText('#story-lead', s.lead);
+    setText('#story-bounty', s.bounty);
+    setText('#story-id', `#${s.id}`);
+    setText('#story-classification', s.classification);
+    setText('#story-threat', s.threat);
+    setText('#story-location', s.location);
+    setText('#story-quote', s.quote);
+    const storyImage = document.querySelector('#story-subject-image');
+    if (storyImage) storyImage.src = s.image;
+    const storyBody = document.querySelector('#story-body');
+    if (storyBody) storyBody.innerHTML = s.story.map(text => `<p>${text}</p>`).join('');
+
+    const storyLink = document.querySelector('#model-story-link');
+    if (storyLink) storyLink.dataset.subject = s.id;
+    document.body.dataset.subject = s.id;
+  }
+
+  function renderBountyBoard() {
+    const list = document.querySelector('#bounty-list');
+    if (!list) return;
+    list.innerHTML = subjects.map((s, index) => `
+      <article class="bounty-row panel-frame" data-subject-row="${s.id}">
+        <div class="bounty-index">${String(index + 1).padStart(2, '0')}</div>
+        <a class="bounty-thumb-link" href="#model" data-subject="${s.id}" aria-label="Open 3D viewer for ${s.name}">
+          <div class="bounty-thumb ${s.tint}">
+            <img src="${s.image}" alt="${s.name}" />
+            <span class="thumb-scan-line"></span>
+            <span class="thumb-hover">OPEN 3D</span>
+          </div>
+        </a>
+        <div class="bounty-info">
+          <div class="bounty-info-top">
+            <div>
+              <p class="section-tag danger">WANTED // CASE ${s.id}</p>
+              <h2>${s.name}</h2>
+              <p class="bounty-alias">ALIAS: ${s.alias}</p>
+            </div>
+            <span class="threat-level threat-${s.threat.toLowerCase()}">${s.threat.toUpperCase()}</span>
+          </div>
+          <p class="bounty-summary">${s.summary}</p>
+          <div class="bounty-meta-grid">
+            <span>CLASSIFICATION <strong>${s.classification}</strong></span>
+            <span>STATUS <strong>${s.status}</strong></span>
+            <span>LAST SEEN <strong>${s.location}</strong></span>
+          </div>
+        </div>
+        <a class="bounty-list-button" href="#story" data-subject="${s.id}" aria-label="Open case story for ${s.name}">
+          <span>WANTED BOUNTY</span>
+          <strong>${s.bounty}</strong>
+          <small>OPEN CASE FILE ›</small>
+        </a>
+      </article>`).join('');
+  }
+
+  function showView(route, { scroll = true } = {}) {
+    route = normalizeRoute(route);
+    views.forEach(view => {
+      const active = view.dataset.view === route;
+      view.classList.toggle('is-active', active);
+      view.setAttribute('aria-hidden', active ? 'false' : 'true');
+    });
+    navLinks.forEach(link => link.classList.toggle('active', link.dataset.route === route));
+    const meta = viewMeta[route];
+    if (headerContext) headerContext.textContent = meta.context;
+    if (footerMotto) footerMotto.textContent = meta.motto;
+    document.title = meta.title;
+    document.body.dataset.activeView = route;
+    window.dispatchEvent(new CustomEvent('hsc:viewchange', { detail: { route, subject: selectedSubject } }));
+    if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.addEventListener('click', event => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+    const route = normalizeRoute(link.getAttribute('href'));
+    if (!Object.prototype.hasOwnProperty.call(viewMeta, route)) return;
+    event.preventDefault();
+    if (link.dataset.subject) selectSubject(link.dataset.subject);
+    if (location.hash !== `#${route}`) history.pushState({ route, subject: selectedSubject.id }, '', `#${route}`);
+    showView(route);
+  });
+
+  window.addEventListener('popstate', event => {
+    if (event.state && event.state.subject) selectSubject(event.state.subject);
+    showView(location.hash, { scroll: false });
+  });
+  window.addEventListener('hashchange', () => showView(location.hash, { scroll: false }));
+
+  const clock = document.querySelector('#clock');
+  if (clock) {
+    const updateClock = () => {
+      clock.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    };
+    updateClock();
+    setInterval(updateClock, 1000);
+  }
+
+  const creatorList = document.querySelector('#creator-list');
+  if (creatorList && Array.isArray(window.HSC_CREATORS)) {
+    creatorList.innerHTML = window.HSC_CREATORS.map((creator, index) => {
+      const name = creator.name || `Creator ${index + 1}`;
+      const role = creator.role || 'CREATOR';
+      return `<div class="creator-entry"><span>${role}</span><strong>${name}</strong></div>`;
+    }).join('');
+  }
+
+  renderBountyBoard();
+  updateSubjectViews();
+  showView(location.hash || '#home', { scroll: false });
+})();

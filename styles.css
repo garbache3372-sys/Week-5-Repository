@@ -1527,3 +1527,210 @@ button { font: inherit; }
   .bounty-meta-grid span:nth-child(3) { display: none; }
   .thumb-hover { display: none; }
 }
+
+/* =========================
+   HSC AUTHENTICATION GATE
+   ========================= */
+.auth-status {
+  position: absolute;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid rgba(106,216,255,.2);
+  background: rgba(2,13,23,.74);
+  color: var(--muted);
+  font-family: "Orbitron", sans-serif;
+  font-size: .5rem;
+  letter-spacing: .12em;
+}
+.auth-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff3e4d;
+  box-shadow: 0 0 10px rgba(255,62,77,.85);
+}
+body.authenticated .auth-indicator {
+  background: #52ffbe;
+  box-shadow: 0 0 10px rgba(82,255,190,.8);
+}
+.logout-button {
+  margin-left: 5px;
+  border: 1px solid rgba(255,62,77,.45);
+  background: rgba(75,8,16,.7);
+  color: #ff9ca5;
+  padding: 6px 9px;
+  font-family: "Orbitron", sans-serif;
+  font-size: .46rem;
+  letter-spacing: .12em;
+  cursor: pointer;
+}
+.logout-button:hover { border-color: var(--red); color: #fff; }
+
+.login-shell {
+  min-height: calc(100vh - 185px);
+  width: min(1120px, 94vw);
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  padding: 54px 0 70px;
+}
+.login-panel {
+  width: min(920px, 100%);
+  display: grid;
+  grid-template-columns: .72fr 1.28fr;
+  overflow: hidden;
+  background:
+    linear-gradient(115deg, rgba(3,17,28,.97), rgba(4,25,39,.92)),
+    repeating-linear-gradient(0deg, transparent 0 34px, rgba(75,188,255,.025) 35px);
+}
+.login-emblem {
+  min-height: 520px;
+  display: grid;
+  place-items: center;
+  border-right: 1px solid rgba(106,216,255,.22);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(39,165,232,.16), transparent 34%),
+    linear-gradient(rgba(5,24,39,.64), rgba(2,12,21,.9));
+}
+.login-reticle {
+  position: relative;
+  width: 230px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(91,207,255,.55);
+  border-radius: 50%;
+  box-shadow: inset 0 0 45px rgba(31,156,221,.11), 0 0 35px rgba(31,156,221,.12);
+}
+.login-reticle::before,
+.login-reticle::after,
+.login-reticle span::before,
+.login-reticle span::after {
+  content: "";
+  position: absolute;
+  background: rgba(91,207,255,.58);
+}
+.login-reticle::before { width: 118%; height: 1px; left: -9%; top: 50%; }
+.login-reticle::after { height: 118%; width: 1px; top: -9%; left: 50%; }
+.login-reticle span::before { width: 72%; height: 72%; border: 1px solid rgba(91,207,255,.22); background: transparent; border-radius: 50%; left: 14%; top: 14%; }
+.login-reticle span::after { width: 38%; height: 38%; border: 1px solid rgba(255,62,77,.34); background: transparent; transform: rotate(45deg); left: 31%; top: 31%; }
+.login-reticle strong {
+  position: relative;
+  z-index: 2;
+  color: #d9f6ff;
+  font-family: "Orbitron", sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: .16em;
+  text-shadow: 0 0 18px rgba(75,188,255,.72);
+}
+.login-copy { padding: 58px 56px 48px; align-self: center; }
+.login-copy h1 {
+  margin: 10px 0 12px;
+  color: #e9f9ff;
+  font-family: "Orbitron", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.35rem);
+  letter-spacing: .14em;
+}
+.login-intro {
+  max-width: 600px;
+  margin: 0 0 30px;
+  color: #7ea7b9;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.login-form { display: grid; gap: 16px; }
+.login-field { display: grid; gap: 7px; }
+.login-field span {
+  color: #64c8ef;
+  font-family: "Orbitron", sans-serif;
+  font-size: .54rem;
+  letter-spacing: .13em;
+}
+.login-field input {
+  width: 100%;
+  border: 1px solid rgba(106,216,255,.28);
+  outline: 0;
+  background: rgba(1,11,19,.86);
+  color: #dff8ff;
+  padding: 14px 15px;
+  font: 600 1rem "Rajdhani", sans-serif;
+  letter-spacing: .04em;
+  box-shadow: inset 0 0 22px rgba(20,119,169,.06);
+}
+.login-field input:focus {
+  border-color: rgba(106,216,255,.78);
+  box-shadow: 0 0 0 2px rgba(63,190,246,.08), inset 0 0 24px rgba(20,119,169,.1);
+}
+.login-submit {
+  min-height: 52px;
+  margin-top: 5px;
+  border: 1px solid rgba(62,211,255,.58);
+  background: linear-gradient(90deg, rgba(7,62,92,.86), rgba(8,92,125,.72));
+  color: #e4f9ff;
+  font-family: "Orbitron", sans-serif;
+  font-size: .63rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  cursor: pointer;
+  transition: .2s ease;
+}
+.login-submit:hover {
+  border-color: #6ad8ff;
+  box-shadow: 0 0 22px rgba(75,188,255,.2), inset 0 0 18px rgba(75,188,255,.08);
+}
+.login-message {
+  min-height: 18px;
+  margin: 0;
+  color: #ff7180;
+  font-family: "Orbitron", sans-serif;
+  font-size: .52rem;
+  letter-spacing: .09em;
+}
+.login-message.success { color: #52ffbe; }
+.login-security-note {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(106,216,255,.14);
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  color: #567f91;
+  font-family: "Orbitron", sans-serif;
+  font-size: .48rem;
+  letter-spacing: .1em;
+}
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #ff3e4d;
+  box-shadow: 0 0 11px rgba(255,62,77,.7);
+  animation: authPulse 1.7s infinite;
+}
+@keyframes authPulse { 50% { opacity: .35; } }
+body:not(.authenticated) .terminal-launch { pointer-events: none; opacity: .42; }
+
+@media (max-width: 900px) {
+  .auth-status { right: 12px; }
+  .login-panel { grid-template-columns: 1fr; }
+  .login-emblem { min-height: 260px; border-right: 0; border-bottom: 1px solid rgba(106,216,255,.22); }
+  .login-reticle { width: 170px; }
+  .login-copy { padding: 36px 28px 40px; }
+}
+@media (max-width: 650px) {
+  .auth-status { position: static; transform: none; margin: 0 10px 8px auto; width: max-content; }
+  .login-shell { padding-top: 30px; }
+  .login-emblem { min-height: 210px; }
+  .login-reticle { width: 138px; }
+}
+
+/* Administrative route visibility */
+.admin-only { display: none !important; }
+body.admin-access .admin-only { display: inline-flex !important; }

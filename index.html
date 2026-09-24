@@ -21,6 +21,11 @@
       <span class="brand-subtitle">Human Systems Check</span>
     </a>
     <img class="robot-logo" src="assets/robot-logo.png" alt="HSC robot logo" />
+    <div class="auth-status" id="auth-status" aria-live="polite">
+      <span class="auth-indicator"></span>
+      <span id="auth-status-text">ACCESS LOCKED</span>
+      <button id="logout-button" class="logout-button" type="button" hidden>LOG OUT</button>
+    </div>
   </header>
 
   <nav class="top-nav top-nav-single" aria-label="Primary navigation">
@@ -28,6 +33,36 @@
   </nav>
 
   <main id="app-shell" class="single-app-shell">
+    <section class="app-view" data-view="login" aria-hidden="true">
+      <div class="login-shell">
+        <section class="login-panel panel-frame" aria-labelledby="login-title">
+          <div class="login-emblem" aria-hidden="true">
+            <div class="login-reticle"><span></span><strong>HSC</strong></div>
+          </div>
+          <div class="login-copy">
+            <p class="section-tag">HSC SECURE NETWORK // AUTHORIZATION REQUIRED</p>
+            <h1 id="login-title">SYSTEM LOGIN</h1>
+            <p class="login-intro">Authenticate to access active warrants, bounty records, 3D subject scans, and case stories. Administrative accounts also receive access to the HSC operations terminal.</p>
+            <form id="login-form" class="login-form" autocomplete="off">
+              <label class="login-field">
+                <span>OFFICER ID / USERNAME</span>
+                <input id="login-username" name="username" type="text" autocomplete="username" required placeholder="Enter officer ID" />
+              </label>
+              <label class="login-field">
+                <span>SECURITY KEY / PASSWORD</span>
+                <input id="login-password" name="password" type="password" autocomplete="current-password" required placeholder="Enter security key" />
+              </label>
+              <button class="login-submit" type="submit">AUTHENTICATE // ENTER NETWORK</button>
+              <p id="login-message" class="login-message" role="alert"></p>
+            </form>
+            <div class="login-security-note">
+              <span class="pulse-dot"></span>
+              <span>BOUNTY DATABASE ENCRYPTED // UNAUTHORIZED ACCESS DENIED</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
     <section class="app-view" data-view="home" aria-hidden="true">
 <div class="bounty-board-shell">
   <section class="bounty-board-head panel-frame">
@@ -36,11 +71,6 @@
       <h1>WANTED BOUNTY BOARD</h1>
       <p>Select a subject portrait to open the 3D scan. Select the red bounty button to open that subject's case story.</p>
     </div>
-    <a class="terminal-launch" href="#terminal">
-      <span>HSC OPERATIONS</span>
-      <strong>OPEN WEB APPLICATION</strong>
-      <small>CASE TERMINAL // REPORT DATABASE</small>
-    </a>
   </section>
   <section class="bounty-list" id="bounty-list" aria-label="Wanted subject list"></section>
 </div>
@@ -112,7 +142,7 @@
 </section><section class="app-view" data-view="story" aria-hidden="true">
 <div class="page-route-bar">
   <a class="route-action" href="#home">‹ RETURN TO HOME</a>
-  <a class="route-action route-action-next" href="#terminal">OPEN WEB APP ›</a>
+  <a class="route-action route-action-next admin-only" href="#terminal">OPEN CASE TERMINAL ›</a>
 </div>
 <div class="story-layout">
 <section class="story-hero panel-frame">
@@ -419,6 +449,7 @@
 
   <script src="https://cdn.babylonjs.com/babylon.js"></script>
   <script src="creators.js"></script>
+  <script src="auth-config.js"></script>
   <script src="app.js"></script>
   <script src="application.js"></script>
   <script src="model.js"></script>

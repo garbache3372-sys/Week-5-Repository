@@ -86,6 +86,7 @@
   let selectedSubject = subjects[0];
 
   const viewMeta = {
+    login: { context: 'HSC NETWORK // AUTHORIZATION REQUIRED', motto: 'SECURE ACCESS // AUTHENTICATION REQUIRED', title: 'HSC // Secure Login' },
     home: { context: 'CIVIL PROTECTION // ACTIVE NETWORK', motto: 'REAL PEOPLE · REAL THREATS · REAL SOLUTIONS', title: 'HSC // Human Systems Check' },
     model: { context: 'SUBJECT ANALYSIS // LIVE RENDER', motto: 'INTERACTIVE SUBJECT ANALYSIS', title: 'HSC // 3D Subject Viewer' },
     story: { context: 'CASE FILE // ACCESS GRANTED', motto: 'ACTIVE CASE FILE // CLASSIFIED', title: 'HSC // Subject Story' },
@@ -97,6 +98,40 @@
   const navLinks = [...document.querySelectorAll('.nav-chip[data-route]')];
   const headerContext = document.querySelector('#header-context');
   const footerMotto = document.querySelector('#footer-motto');
+  const loginForm = document.querySelector('#login-form');
+  const loginMessage = document.querySelector('#login-message');
+  const authStatusText = document.querySelector('#auth-status-text');
+  const logoutButton = document.querySelector('#logout-button');
+  const protectedRoutes = new Set(['home', 'model', 'story', 'terminal']);
+  const adminRoutes = new Set(['terminal']);
+
+  function isAuthenticated() {
+    return sessionStorage.getItem('hsc-authenticated') === 'true';
+  }
+
+  function getSignedInName() {
+    return sessionStorage.getItem('hsc-auth-name') || 'AUTHORIZED USER';
+  }
+
+  function getSignedInRole() {
+    return (sessionStorage.getItem('hsc-auth-role') || 'officer').toLowerCase();
+  }
+
+  function isAdmin() {
+    return isAuthenticated() && getSignedInRole() === 'admin';
+  }
+
+  function syncAuthUI() {
+    const authed = isAuthenticated();
+    document.body.classList.toggle('authenticated', authed);
+    document.body.classList.toggle('admin-access', isAdmin());
+    if (authStatusText) {
+      authStatusText.textContent = authed
+        ? `${getSignedInName()} // ${isAdmin() ? 'ADMIN' : 'OFFICER'} // ONLINE`
+        : 'ACCESS LOCKED';
+    }
+    if (logoutButton) logoutButton.hidden = !authed;
+  }
 
   function normalizeRoute(value) {
     const route = String(value || '').replace(/^#/, '').toLowerCase();
@@ -183,6 +218,22 @@
 
   function showView(route, { scroll = true } = {}) {
     route = normalizeRoute(route);
+    if (!isAuthenticated() && protectedRoutes.has(route)) {
+      route = 'login';
+      if (location.hash !== '#login') history.replaceState({ route: 'login' }, '', '#login');
+    }
+    if (isAuthenticated() && adminRoutes.has(route) && !isAdmin()) {
+      route = 'home';
+      if (location.hash !== '#home') history.replaceState({ route: 'home', subject: selectedSubject.id }, '', '#home');
+      if (authStatusText) {
+        authStatusText.textContent = 'ACCESS DENIED // ADMIN CLEARANCE REQUIRED';
+        window.setTimeout(syncAuthUI, 2200);
+      }
+    }
+    if (isAuthenticated() && route === 'login') {
+      route = 'home';
+      if (location.hash !== '#home') history.replaceState({ route: 'home', subject: selectedSubject.id }, '', '#home');
+    }
     views.forEach(view => {
       const active = view.dataset.view === route;
       view.classList.toggle('is-active', active);
@@ -201,19 +252,90 @@
   document.addEventListener('click', event => {
     const link = event.target.closest('a[href^="#"]');
     if (!link) return;
-    const route = normalizeRoute(link.getAttribute('href'));
+    let route = normalizeRoute(link.getAttribute('href'));
     if (!Object.prototype.hasOwnProperty.call(viewMeta, route)) return;
     event.preventDefault();
-    if (link.dataset.subject) selectSubject(link.dataset.subject);
+
+    if (!isAuthenticated() && protectedRoutes.has(route)) {
+      route = 'login';
+      if (loginMessage) {
+        loginMessage.textContent = 'AUTHENTICATION REQUIRED // SIGN IN TO ACCESS BOUNTY RECORDS';
+        loginMessage.classList.remove('success');
+      }
+    } else if (adminRoutes.has(route) && !isAdmin()) {
+      route = 'home';
+      if (authStatusText) {
+        authStatusText.textContent = 'ACCESS DENIED // ADMIN CLEARANCE REQUIRED';
+        window.setTimeout(syncAuthUI, 2200);
+      }
+    } else if (link.dataset.subject) {
+      selectSubject(link.dataset.subject);
+    }
+
     if (location.hash !== `#${route}`) history.pushState({ route, subject: selectedSubject.id }, '', `#${route}`);
     showView(route);
   });
 
   window.addEventListener('popstate', event => {
-    if (event.state && event.state.subject) selectSubject(event.state.subject);
+    if (event.state && event.state.subject && isAuthenticated()) selectSubject(event.state.subject);
     showView(location.hash, { scroll: false });
   });
   window.addEventListener('hashchange', () => showView(location.hash, { scroll: false }));
+
+  if (loginForm) {
+    loginForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const formData = new FormData(loginForm);
+      const username = String(formData.get('username') || '').trim();
+      const password = String(formData.get('password') || '');
+      const users = Array.isArray(window.HSC_AUTH?.users) ? window.HSC_AUTH.users : [];
+      const account = users.find(user =>
+        String(user.username || '').toLowerCase() === username.toLowerCase() &&
+        String(user.password || '') === password
+      );
+
+      if (!account) {
+        if (loginMessage) {
+          loginMessage.textContent = 'ACCESS DENIED // INVALID OFFICER ID OR SECURITY KEY';
+          loginMessage.classList.remove('success');
+        }
+        const passwordInput = document.querySelector('#login-password');
+        if (passwordInput) { passwordInput.value = ''; passwordInput.focus(); }
+        return;
+      }
+
+      sessionStorage.setItem('hsc-authenticated', 'true');
+      sessionStorage.setItem('hsc-auth-name', account.displayName || account.username || 'AUTHORIZED USER');
+      sessionStorage.setItem('hsc-auth-role', String(account.role || 'officer').toLowerCase());
+      syncAuthUI();
+      renderBountyBoard();
+      updateSubjectViews();
+      if (loginMessage) {
+        loginMessage.textContent = isAdmin()
+          ? 'ADMIN ACCESS GRANTED // OPERATIONS TERMINAL CLEARANCE ENABLED'
+          : 'ACCESS GRANTED // LOADING ACTIVE WARRANT DATABASE';
+        loginMessage.classList.add('success');
+      }
+      loginForm.reset();
+      history.replaceState({ route: 'home', subject: selectedSubject.id }, '', '#home');
+      showView('home');
+    });
+  }
+
+  if (logoutButton) {
+    logoutButton.addEventListener('click', () => {
+      sessionStorage.removeItem('hsc-authenticated');
+      sessionStorage.removeItem('hsc-auth-name');
+      sessionStorage.removeItem('hsc-auth-role');
+      syncAuthUI();
+      const list = document.querySelector('#bounty-list');
+      if (list) list.innerHTML = '';
+      history.replaceState({ route: 'login' }, '', '#login');
+      showView('login');
+      const usernameInput = document.querySelector('#login-username');
+      if (usernameInput) usernameInput.focus();
+    });
+  }
 
   const clock = document.querySelector('#clock');
   if (clock) {
@@ -233,7 +355,15 @@
     }).join('');
   }
 
-  renderBountyBoard();
-  updateSubjectViews();
-  showView(location.hash || '#home', { scroll: false });
+  syncAuthUI();
+  if (isAuthenticated()) {
+    renderBountyBoard();
+    updateSubjectViews();
+  } else {
+    const list = document.querySelector('#bounty-list');
+    if (list) list.innerHTML = '';
+  }
+
+  const initialRoute = location.hash || (isAuthenticated() ? '#home' : '#login');
+  showView(initialRoute, { scroll: false });
 })();
